@@ -22,6 +22,7 @@ public class PongPanel extends JPanel implements KeyListener{
 	private Timer tickTimer;
 	private static int playerLeftScore = 0;
 	private static int playerRightScore = 0;
+	private static int tickCount = 0;
 	
 	public void initAll() {
 		TimerTask task = new TimerTask() {
@@ -31,12 +32,12 @@ public class PongPanel extends JPanel implements KeyListener{
 			}
 		};
 		this.pongLeft = new Pong(40, 225, 10, 160, Color.blue);
-		this.pongRight = new Pong(760, 225, 10, 160, Color.blue);
-		this.ball = new Ball(100,50 ,20, Color.red); 
+		this.pongRight = new Pong(750, 225, 10, 160, Color.blue);
+		this.ball = new Ball(450,50 ,20, Color.red); 
 		this.wall = new Wall(0, 0, 800, 600, 20, Color.black);
 		
 		tickTimer = new Timer();
-		tickTimer.scheduleAtFixedRate(task, 0, 200);
+		tickTimer.scheduleAtFixedRate(task, 0, 100);
 		
 	}
 	
@@ -64,13 +65,20 @@ public class PongPanel extends JPanel implements KeyListener{
 		g.setFont(new Font("TimesRoman", Font.PLAIN, 16)); 
 		g.drawString("Score: " + playerLeftScore, 580,35);
 		g.drawString("Score: " + playerRightScore, 130,35);
-
+		if(playerLeftScore >= 5) {
+			gameOver();
+			g.drawString("Pong Right WINS!", 350, 275);
+		}
+		if(playerRightScore >= 5) {
+			gameOver();
+			g.drawString("Pong Left WINS!", 350, 275);
+		}
 	}
 	
 	public void tick() {
+		tickCount++;
 		repaint();
-		ball.detectPongCollision(pongLeft);
-		ball.detectPongCollision(pongRight);
+		ball.detectPongCollision(pongLeft, pongRight);
 		ball.detectWallCollision(wall);
 		pongLeft.detectWallCollision(wall);
 		pongRight.detectWallCollision(wall);
@@ -127,6 +135,10 @@ public class PongPanel extends JPanel implements KeyListener{
 	@Override
 	public void keyTyped(KeyEvent arg0) {
 		
+	}
+	
+	public static int getTickCount() {
+		return tickCount;
 	}
 	
 }

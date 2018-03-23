@@ -8,7 +8,7 @@ public class Pong extends JPanel{
 	private int height, width, x, y;
 	private Color color;
 	public enum Direction {UP, DOWN, STILL};
-	public static Direction dir = Direction.UP;
+	private Direction dir;
 	
 	public Pong(int x, int y, int width, int height, Color color) {
 		this.x = x;
@@ -16,15 +16,12 @@ public class Pong extends JPanel{
 		this.width = width;
 		this.height = height;
 		this.color = color;
+		dir = Direction.STILL;
 	}
 	
 	public void drawPong(Graphics g) {
 		g.setColor(color);
 		g.fillRect(x, y, width, height);
-	}
-	
-	public void setDirection(Direction dir) {
-		this.dir = dir;
 	}
 
 	public void detectWallCollision(Wall wall) {
@@ -40,7 +37,7 @@ public class Pong extends JPanel{
 				if((y + height) < (wall.getMaxY() - wall.getWallThickness())) {
 					y += 20;
 				}
-				setDirection(Direction.STILL);
+			    setDirection(Direction.STILL);
 				break;
 			}
 			case STILL:{
@@ -64,6 +61,14 @@ public class Pong extends JPanel{
 	
 	public int getY() {
 		return this.y;
+	}
+	
+	public Direction getDirection() {
+		return dir;
+	}
+	
+	public void setDirection(Direction dir) {
+		this.dir = dir;
 	}
 
 }

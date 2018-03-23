@@ -22,8 +22,10 @@ public class Ball {
 	}
 	
 	public void drawBall(Graphics g) {
-		g.setColor(color);
-		g.fillOval(x, y, radius,radius);
+		//if(PongPanel.getTickCount() % 4 == 0) {
+			g.setColor(color);
+			g.fillOval(x, y, radius,radius);
+		//}
 	}
 	
 	public void initBall() {
@@ -43,9 +45,13 @@ public class Ball {
 		y += ySpeed;	
 	}
 	
-	public void detectPongCollision(Pong pong) {
-		if(x <= pong.getX() + pong.getWidth() && y >= pong.getY() && y <= pong.getY() + pong.getHeight()) {
-			x = pong.getX() + pong.getWidth();
+	public void detectPongCollision(Pong pongLeft, Pong pongRight) {
+		if(x - pongLeft.getWidth() <= pongLeft.getX() + pongLeft.getWidth() && y >= pongLeft.getY() && y <= pongLeft.getY() + pongLeft.getHeight()) {
+			x = pongLeft.getX() + pongLeft.getWidth() + radius;
+			xSpeed = - xSpeed;
+		}
+		if(x + radius >= pongRight.getX() - pongRight.getWidth() && y >= pongRight.getY() && y <= pongRight.getY() + pongRight.getHeight()) {
+			x = pongRight.getX() - pongRight.getWidth() - radius;
 			xSpeed = - xSpeed;
 		}
 	}
@@ -60,10 +66,11 @@ public class Ball {
 		y += ySpeed;
 		
 	    if (x < ballMinX) {
-	    	xSpeed = - xSpeed;
+	    	PongPanel.updatePongLeftScore();
+	    	initBall();
 	    } else if (x > ballMaxX) {
-	    	xSpeed = -xSpeed;
-	        x = ballMaxX;
+	    	PongPanel.updatePongRightScore();
+	    	initBall();
 	    }
 	    if (y < ballMinY) {
 	    	ySpeed = -ySpeed;
